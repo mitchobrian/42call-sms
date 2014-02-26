@@ -3,6 +3,7 @@
 
 42call SMS Example
 
+```javascript
 var date = new Date();
 date = new Date(date.valueOf());
 
@@ -24,3 +25,4 @@ $.ajax({
     alert(data);
     $.mobile.loading('hide');
 });
+```
