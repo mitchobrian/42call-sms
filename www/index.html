@@ -1,0 +1,76 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>sms</title>	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+      
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css">
+        
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile-1.4.0.min.js"></script>
+    <script type="text/javascript" src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+    <script type="text/javascript" src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha1.js"></script>     
+    <script type="text/javascript" src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/components/enc-base64-min.js"></script>     
+    <script type="text/javascript" src="phonegap.js"></script>
+
+</head> 
+<body>
+    <div data-role="page" data-fullscreen="true" style="text-align:center;">
+    
+    <h1>42call SMS sample</h1>
+    
+    <div data-role="fieldcontain" class="ui-hide-label" style="margin:20px;">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" value="" placeholder="Username"/>
+    </div>
+    <div data-role="fieldcontain" class="ui-hide-label" style="margin:20px;">
+        <label for="password">Password:</label>
+        <input type="password" name="username" id="password" value="" placeholder="Password"/>
+    </div>
+    <div data-role="fieldcontain" class="ui-hide-label" style="margin:20px;">
+        <label for="to">To:</label>
+        <input type="number" name="to" id="to" value="" placeholder="+49179XXXXX"/>
+    </div>
+    <div data-role="fieldcontain" class="ui-hide-label" style="margin:20px;">
+    <label for="textarea-a">SMS:</label>
+    <textarea name="textarea" id="textarea-a">My SMS Text.</textarea>    
+    </div>
+    <div data-role="fieldcontain" class="ui-hide-label" style="margin:20px;">
+    <button type="button" onclick="javascript:sms();">send</button>
+    </div>
+    
+    <script type="text/javascript">
+        function sms() {
+            if($('#username').val() != '' && $('#password').val() != '' && $('#textarea-a').val() != '') {
+                
+                $.mobile.loading('show', {theme: "a", textVisible: true, text: "sending...", textonly: false});
+                
+                var date = new Date();
+                date = new Date(date.valueOf());
+
+                var passMd5 = CryptoJS.MD5($('#password').val());
+                passMd5 = passMd5.toString();
+
+                var hash = CryptoJS.HmacSHA1(passMd5+"\n"+date, passMd5);
+                hash = hash.toString(CryptoJS.enc.Base64);
+
+                $.ajax({
+                    type:"POST",
+                    headers : {
+                        "x-date" : date,
+                        "x-authorization" : $('#username').val()+":"+hash,
+                }, 
+                    data: { act: "sendSms", phonenumbers : $('#to').val(), message : $('#textarea-a').val()},
+                    url: "https://login.42call.com/api/rest/v2/?sms"
+                }).done(function(data) {
+                    alert(data);
+                    $.mobile.loading('hide');
+                });
+            } else {
+                alert('input error');
+            }
+        }
+    </script>
+    </div>
+</body>
+</html>
