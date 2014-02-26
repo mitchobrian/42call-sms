@@ -32,6 +32,29 @@
 <a name="42call-sms" class="anchor" href="#42call-sms"><span class="octicon octicon-link"></span></a>42call-sms</h1>
 
 <p>42call SMS Example</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+<span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">date</span><span class="p">.</span><span class="nx">valueOf</span><span class="p">());</span>
+
+<span class="kd">var</span> <span class="nx">passMd5</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">.</span><span class="nx">MD5</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">'#password'</span><span class="p">).</span><span class="nx">val</span><span class="p">());</span>
+<span class="nx">passMd5</span> <span class="o">=</span> <span class="nx">passMd5</span><span class="p">.</span><span class="nx">toString</span><span class="p">();</span>
+
+<span class="kd">var</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">CryptoJS</span><span class="p">.</span><span class="nx">HmacSHA1</span><span class="p">(</span><span class="nx">passMd5</span><span class="o">+</span><span class="s2">"\n"</span><span class="o">+</span><span class="nx">date</span><span class="p">,</span> <span class="nx">passMd5</span><span class="p">);</span>
+<span class="nx">hash</span> <span class="o">=</span> <span class="nx">hash</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="nx">CryptoJS</span><span class="p">.</span><span class="nx">enc</span><span class="p">.</span><span class="nx">Base64</span><span class="p">);</span>
+
+<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="nx">type</span><span class="o">:</span><span class="s2">"POST"</span><span class="p">,</span>
+    <span class="nx">headers</span> <span class="o">:</span> <span class="p">{</span>
+        <span class="s2">"x-date"</span> <span class="o">:</span> <span class="nx">date</span><span class="p">,</span>
+        <span class="s2">"x-authorization"</span> <span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#username'</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span><span class="o">+</span><span class="s2">":"</span><span class="o">+</span><span class="nx">hash</span><span class="p">,</span>
+<span class="p">},</span> 
+    <span class="nx">data</span><span class="o">:</span> <span class="p">{</span> <span class="nx">act</span><span class="o">:</span> <span class="s2">"sendSms"</span><span class="p">,</span> <span class="nx">phonenumbers</span> <span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#to'</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span> <span class="nx">message</span> <span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#textarea-a'</span><span class="p">).</span><span class="nx">val</span><span class="p">()},</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="s2">"https://login.42call.com/api/rest/v2/?sms"</span>
+<span class="p">}).</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">alert</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">mobile</span><span class="p">.</span><span class="nx">loading</span><span class="p">(</span><span class="s1">'hide'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
       </section>
     </div>
 
