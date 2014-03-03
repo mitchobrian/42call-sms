@@ -45,8 +45,9 @@
                 
                 $.mobile.loading('show', {theme: "a", textVisible: true, text: "sending...", textonly: false});
                 
-                var date = new Date();
-                date = new Date(date.valueOf());
+                var now = new Date();
+                date = new Date(now.getTime());
+                date = date.toISOString();
 
                 var passMd5 = CryptoJS.MD5($('#password').val());
                 passMd5 = passMd5.toString();
