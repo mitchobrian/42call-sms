@@ -4,8 +4,9 @@
 42call SMS Example
 
 ```javascript
-var date = new Date();
-date = new Date(date.valueOf());
+var now = new Date();
+date = new Date(now.getTime());
+date = date.toISOString();
 
 var passMd5 = CryptoJS.MD5($('#password').val());
 passMd5 = passMd5.toString();
